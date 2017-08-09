@@ -1,0 +1,3 @@
+create /ciao/nico
+create /fine
+create /ciao/cuao/ciao
