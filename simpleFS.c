@@ -8,29 +8,35 @@
 #define maxLen 255
 #define maxCom 10
 #define maxPath 65025
+#define maxSons 1024
+#define knuthConst 0.6180339887
+
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
-
 
 //node structure
 typedef struct node_s{
 	char *name;
 	int numberOfSons;
 	int type; // 0= file , 1= directory
-	struct node_s *sons[1024];
+	struct node_s *sons[maxSons];
 
 } node;
 
 
 node *  detectAction(char[], node * root);
-node* initTree(node*);
 unsigned long hash(unsigned char *);
 void getTokens(char[][maxLen+1], char[maxPath]);
-node* initNode(node * , char *);
+node* initNode( char *);
 long hashFunction(unsigned char *, int);
+node* create (node*);
+int  find(node*, node **,char [][maxLen+1], char [maxPath]);
+void parsePath(char[][maxLen+1], char[maxPath]);
+node* runPath(node * , char [][maxLen+1]);
+
 
 //da eliminare
 void scorriAlbero(node*);
@@ -43,7 +49,7 @@ int main(int argc,char*argv[]){
 	int action,foundEOF=0;
 	node *root, *temp;
 
-	root= initTree(root);
+	root= initNode( "root");
 
 	while (!foundEOF){
 		scanf ("%s",&command);
@@ -60,54 +66,30 @@ int main(int argc,char*argv[]){
 }
 
 node* detectAction(char input[maxCom],node * root){
-	char path[maxPath], tokens[maxLen][maxLen+1];
-	int pathLen=0,i=0, index=0;
-	node * temp=root;
 
-	//initPath
-	for (int j=0; j<maxLen; j++){
-		strcpy(tokens[j], "--");
-	}
+	int i=0,res;
 
 	//detectAction
 	if(!strcmp(input,"create")){
-		scanf ("%s",&path);
-		getTokens(tokens, path );
-		while(strcmp(tokens[i], "--")){
-			i++;
-		}
+		root= create(root);	
+	} else if(!strcmp(input, "find")){
+		//res=find(root);
 
-		//scorro percorso
-		if (i==1){
-			//todo choose how to assign number of 1024 sons
-			//root->sons[1024]
-			printf("--> %s\n", tokens[0]);
-			index =hashFunction(tokens[0], 0);
-			root->sons[index]=initNode(root->sons, tokens[i]);
-			root->numberOfSons= root->numberOfSons+1;
-		
-		}
-	
 	}
+
 	return root;
 }
 
-node* initTree(node * root){
-	if(root = (node*) malloc(sizeof(node))){
-		root->name= "root";
-		root->numberOfSons= 0;
-		root->type= 1;
-	}	
-
-return root;
-}
-
-node* initNode(node * n, char * name){
+node* initNode( char * name){
+	node* n;
 	if(n = (node*) malloc(sizeof(node))){
 		n->name= name;
 		n->numberOfSons= 0;
 		n->type= 1;
 	}	
+	for(int i =0; i<maxSons; i++){
+		n->sons[i]= NULL;
+	}
 
 	return n;
 }
@@ -141,9 +123,7 @@ long hashFunction(unsigned char *str, int trial){
 	unsigned long h= hash(str);
 
 	index = h+(0.5*trial)+(0.5*(trial*trial)); //quadratic probing
-	printf("index: --> %ld\n", index);
-
-	index= floor(1024*((index*(0.5*(sqrt(5) - 1)))-floor((index*(0.5*(sqrt(5) - 1))))));
+	index= floor(1024*((index*knuthConst)-floor(index*(knuthConst))));
 
 	printf("--- index: %d\n",index);
 
@@ -167,6 +147,104 @@ void getTokens(char tokens[][maxLen+1] , char path[maxPath] ){
    }
 
 }
+
+node* create (node*root){
+	node * temp=root;
+	node * resFind=NULL;
+	int i=0, index=0, j, end=0;
+	char path[maxPath], tokens[maxLen][maxLen+1];
+	
+	//initPath
+	for (int j=0; j<maxLen; j++){
+			strcpy(tokens[j], "--");
+		}
+	
+	parsePath(tokens, path);
+	
+	printf("Fatto parse\n");
+	resFind= runPath(root, tokens);
+	if(resFind!=NULL){
+		printf("name father --> %s\n", resFind->name);
+		j=0;
+		while(strcmp(tokens[j],"--"))
+			j++;
+		index= hashFunction(tokens[j],0);
+		resFind->sons[index]= initNode(tokens[j]);
+		printf("Created\n");
+	}
+	
+	/*while(strcmp(tokens[i], "--")){
+		printf("--> %s\n", tokens[i]);
+		index =hashFunction(tokens[i], 0);
+		printf("index: %d\n",index);
+
+		j=0;
+
+		while (temp->sons[index] != NULL  && j<1024){ 		
+			j++;
+			index= hashFunction(tokens[i],j);
+			printf("index: %d\n",index);
+			
+		}
+		/*
+		while (!strcmp(temp->sons[index]->name ,tokens[i])){
+			temp= temp->sons[index];
+		}
+
+		i++;
+	}*/
+
+	//scorro percorso
+	/*if (i==1){
+		//todo choose how to assign number of 1024 sons
+		//root->sons[1024]
+		printf("--> %s\n", tokens[0]);
+		index =hashFunction(tokens[0], 0);
+		root->sons[index]=initNode(root->sons, tokens[i]);
+		root->numberOfSons= root->numberOfSons+1;
+	
+	}*/
+	return root;
+}
+
+int find(node * root, node ** res, char tokens[][maxLen+1], char path[maxPath]){
+	int found=0;
+	return found;
+	
+}
+
+void parsePath(char tokens[][maxLen+1], char path[maxPath]){
+
+	scanf ("%s",path);
+	getTokens(tokens, path );
+
+}
+
+node* runPath(node * root,  char tokens[][maxLen+1]){
+	node *  temp=root;
+	int i=0, index;
+	while(strcmp(tokens[i+2],"--") && !strcmp(temp->name, tokens[i]) ){
+		index= hashFunction(tokens[i+1], 0);
+		printf("index after--> %d\n",index );
+		if( temp->sons[index] !=NULL && strcmp(temp->sons[index]-> name , tokens[i+1]) ){
+			temp=temp->sons[index];
+			i++;
+		}else{
+			printf("Errore percorso\n");
+			return NULL;
+		}
+	}
+
+	if(!strcmp(tokens[i+2], "--") ){
+
+		printf("temp-> %s\n", temp->name);
+		printf("end\n");
+		return temp;
+	}
+	else
+		return NULL;
+}
+
 
 
 

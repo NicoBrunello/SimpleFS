@@ -1,5 +1,5 @@
-create /ciaohdouewbhfiurbfwehnr
-create /fuck
-create /policeoifmanchesgterbohIdontknowwwhat 
-create /policeoifmanchesgterbohIdontknowwwhat
+create root/user
+create root/user/nico
+create root/user/nico/file.txt
+
 
