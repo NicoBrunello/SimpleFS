@@ -4,6 +4,8 @@
 
 /* Nicolò Brunello */
 
+//TODO: control how to read the path (starting root)
+
 
 #define maxLen 255
 #define maxCom 10
@@ -124,9 +126,6 @@ long hashFunction(unsigned char *str, int trial){
 
 	index = h+(0.5*trial)+(0.5*(trial*trial)); //quadratic probing
 	index= floor(1024*((index*knuthConst)-floor(index*(knuthConst))));
-
-	printf("--- index: %d\n",index);
-
 	return index;
 }
 
@@ -160,17 +159,16 @@ node* create (node*root){
 		}
 	
 	parsePath(tokens, path);
-	
-	printf("Fatto parse\n");
+
 	resFind= runPath(root, tokens);
 	if(resFind!=NULL){
 		printf("name father --> %s\n", resFind->name);
 		j=0;
-		while(strcmp(tokens[j],"--"))
+		while(strcmp(tokens[j+1],"--"))
 			j++;
 		index= hashFunction(tokens[j],0);
 		resFind->sons[index]= initNode(tokens[j]);
-		printf("Created\n");
+		printf("Created : %s\n",resFind->sons[index]->name);
 	}
 	
 	/*while(strcmp(tokens[i], "--")){
@@ -225,8 +223,8 @@ node* runPath(node * root,  char tokens[][maxLen+1]){
 	int i=0, index;
 	while(strcmp(tokens[i+2],"--") && !strcmp(temp->name, tokens[i]) ){
 		index= hashFunction(tokens[i+1], 0);
-		printf("index after--> %d\n",index );
-		if( temp->sons[index] !=NULL && strcmp(temp->sons[index]-> name , tokens[i+1]) ){
+		printf("index inside--> %d of %s\n",index , tokens[i+1]);
+		if( temp->sons[index] !=NULL && strcmp(temp->sons[index]-> name , tokens[i]) ){
 			temp=temp->sons[index];
 			i++;
 		}else{
@@ -236,9 +234,6 @@ node* runPath(node * root,  char tokens[][maxLen+1]){
 	}
 
 	if(!strcmp(tokens[i+2], "--") ){
-
-		printf("temp-> %s\n", temp->name);
-		printf("end\n");
 		return temp;
 	}
 	else
