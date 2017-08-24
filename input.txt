@@ -1,4 +1,4 @@
-
+create_dir /dir0rid
 create /dir0rid/file0elif
 create /dir0rid/file1elif
 create /dir0rid/file2elif
@@ -2548,3 +2548,20 @@ create /dir49rid/file46elif
 create /dir49rid/file47elif
 create /dir49rid/file48elif
 create /dir49rid/file49elif
+write /dir0rid/file0elif "766d5b2a6ba6475a57307f47bdd778001"
+write /dir0rid/file1elif "766d5b2a6ba6475a57307f47bdd778002"
+write /dir0rid/file2elif "766d5b2a6ba6475a57307f47bdd778003" 
+write /dir0rid/file3elif "766d5b2a6ba6475a57307f47bdd778004"
+write /dir0rid/file4elif "766d5b2a6ba6475a57307f47bdd778005"
+write /dir0rid/file5elif "766d5b2a6ba6475a57307f47bdd778006"
+write /dir0rid/file6elif "766d5b2a6ba6475a57307f47bdd778007"
+write /dir0rid/file7elif "766d5b2a6ba6475a57307f47bdd778008"
+write /dir0rid/file8elif "766d5b2a6ba6475a57307f47bdd778009"
+write /dir0rid/file9elif "766d5b2a6ba6475a57307f47bdd778010"
+read /dir0rid/file0elif
+read /dir0rid/file1elif
+read /dir0rid/file2elif
+read /dir0rid/file3elif
+read /dir0rid/file4elif
+read /dir0rid/file5elif
+exit
