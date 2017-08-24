@@ -240,7 +240,6 @@ node* runPath(node *root, char tokens[][maxLen+1], int count){
 }
 
 node* write (node* root){
-	printf("Write\n");
 	node * temp=root;
 	node * resFather=NULL;
 	size_t len=0;
@@ -280,27 +279,26 @@ node* write (node* root){
 		if(txt = (char*) malloc(sizeof(tkn))) {
 			txt=tkn;
 			resFather->sons[index]->content= txt;  
-			printf("write : < %s >, so %d chars at %d of %s, inside %s\n",resFather->sons[index]->content,strlen(resFather->sons[index]->content),index, resFather->name,resFather->sons[index]->name);
-
 		}	
+		printf("write : < %s >, so %d chars at %d of %s, inside %s\n",resFather->sons[index]->content,strlen(resFather->sons[index]->content),index, resFather->name,resFather->sons[index]->name);
+
 
 	}
-	free(content);
+	
 	content=NULL;
+	free(content);
 
 	return root;
 }
 
 node* read (node* root){
-	printf("read\n");
 	node * temp=root;
 	node * resFather=NULL;
 	size_t len=0;
 	ssize_t read;
 	int i=0, index=0, j, end=0,k=0,n=0;
 	char path[maxPath], tokens[maxLen][maxLen+1],c, *content=NULL;
-	char s[2] = "\"";
-   	char *tkn,*txt;
+
 	//initPath
 	for (int j=0; j<maxLen; j++){
 			strcpy(tokens[j], "--");
@@ -321,11 +319,11 @@ node* read (node* root){
 		else {
 			resFather= runPath(temp, tokens, 0);
 		}
-	if(resFather!=NULL){
-		index= hashFunction(tokens[k],0);
-		if(resFather->sons[index]->content != NULL)
-			printf("Content : < %s >, so %d chars at %d of %s, inside %s\n",resFather->sons[index]->content,strlen(resFather->sons[index]->content),index, resFather->name,resFather->sons[index]->name);
-	}
+	index= hashFunction(tokens[k],0);
+	printf("nameFather -_> %s\n",resFather->sons[index]->name);
+	if(resFather->sons[index]->content != NULL)
+		printf("Content : < %s >, so %d chars at %d of %s, inside %s\n",resFather->sons[index]->content,strlen(resFather->sons[index]->content),index, resFather->name,resFather->sons[index]->name);
+
 
 	return root;
 }
